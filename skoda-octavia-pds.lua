@@ -8,14 +8,14 @@ local autorizzato = false
 
 local function sendAlarm()
 	warn("NORTH7SAILS SHOP | AUTORIZZAZIONE NON CONCESSA PER: "..nomeProdotto)
-	
+
 	local nome = game.CreatorType == Enum.CreatorType.User and game.Players:GetNameFromUserIdAsync(game.CreatorId) or game.GroupService:GetGroupInfoAsync(game.CreatorId).Name
 	local data = { embeds = {
-			{
-				title = "USO NON AUTORIZZATO",
-				description = "**Prodotto:** "..nomeProdotto.."\n\n**Place:**\n"..game.Name.."\n\n**Creatore:**\n"..nome,
-				color = 16711680
-			}}}
+		{
+			title = "USO NON AUTORIZZATO",
+			description = "**Prodotto:** "..nomeProdotto.."\n\n**Place:**\n"..game.Name.."\n\n**Creatore:**\n"..nome,
+			color = 16711680
+		}}}
 	data = http:JSONEncode(data)
 	http:PostAsync(WebhookUrl, data)
 	Destroy()
@@ -23,13 +23,15 @@ end
 
 local function fetchCards()
 	while true do
+		local success, res = pcall(function()
+			local data = http:GetAsync(TrelloUrl..apikeys)
+			nomeProdotto = http:JSONDecode(data).name
+		end)
+		
 		local success, response = pcall(function()
-			return http:GetAsync(TrelloUrl..apikeys)
+			return http:GetAsync(TrelloUrl.."/cards"..apikeys)
 		end)
-    local success, res = pcall(function()
-			nomeProdotto = http:GetAsync(TrelloUrl.."/cards"..apikeys)
-		end)
-	
+		
 		if success then
 			return http:JSONDecode(response)
 		else
@@ -40,6 +42,7 @@ local function fetchCards()
 end
 
 for i,v in pairs(fetchCards()) do
+	print(v)
 	if tonumber(v.desc) == game.CreatorId then
 		autorizzato = true
 	end
@@ -204,7 +207,7 @@ for _, v in Drive do
 		table.remove(Drive, table.find(Drive, v))
 		continue
 	end
-	
+
 	--Apply Wheel Density
 	local cpp = v.CurrentPhysicalProperties
 	local wdensity = 0
@@ -418,7 +421,7 @@ for _, v in Drive do
 			sp.Thickness=_Tune.SusThickness
 			sp.Color=BrickColor.new(_Tune.SusColor)
 			sp.Coils=_Tune.SusCoilCount
-			
+
 			sp.Parent = v
 
 			if v.Name == "FL" or v.Name=="FR" or v.Name =="F" then
@@ -511,13 +514,13 @@ for _, v in Drive do
 	rotationAttachment0.Position = Vector3.new(0, -_Tune.AxleSize/2, 0)
 	rotationAttachment0.Orientation = Vector3.new(0, 0, 90)
 	rotationAttachment0.Parent = base
-	
+
 	local rotationAttachment1 = Instance.new("Attachment")
 	rotationAttachment1.Name = "RotationAttachment1"
 	rotationAttachment1.Position = Vector3.new(0, _Tune.AxleSize/2, 0)
 	rotationAttachment1.Orientation = Vector3.new(0, 0, 90)
 	rotationAttachment1.Parent = arm
-	
+
 	local rotationHinge = Instance.new("HingeConstraint")
 	rotationHinge.Name = "Rotate"
 	rotationHinge.LimitsEnabled = true
@@ -565,7 +568,7 @@ for _, v in Drive do
 		AV.Attachment1.Orientation = Vector3.new(0, 180, 0)
 		BV.Attachment1.Orientation = Vector3.new(0, 180, 0)
 	end
-	
+
 	--Realign Caster
 	if v.Name=="FL" then
 		v.CFrame = v.CFrame*CFrame.Angles(math.rad(-_Tune.FCaster), 0, 0)
@@ -634,7 +637,7 @@ if mass*Units.Mass_kg < _Tune.Weight*0.453592 then
 	--Real life mass in pounds, converted to kg minus existing roblox mass converted to kg, divided by volume of the weight brick in cubic meters, divided by the density of water
 	weightB.CFrame = (car.DriveSeat.CFrame-car.DriveSeat.Position+center)*CFrame.new(0, _Tune.CGHeight, 0)
 	weightB.Parent = car.Body
-	
+
 	--Density Cap
 	if weightB.CustomPhysicalProperties.Density>=100 then
 		warn( "\n\t [A-Chassis ".._BuildVersion.."]: Density too high for specified volume."
@@ -800,7 +803,7 @@ seat.ChildRemoved:Connect(function(child: Instance)
 	if child.Name == "SeatWeld" and child:IsA("Weld") then
 		-- Safety check in case vehicle destroying
 		if not seat.Parent then return end
-		
+
 		-- Remove Flip Force
 		if seat:FindFirstChild("Flip") then
 			if _Tune.FlipType == "New" then
@@ -809,7 +812,7 @@ seat.ChildRemoved:Connect(function(child: Instance)
 				seat.Flip.MaxTorque = Vector3.new()
 			end
 		end
-		
+
 		-- Handle wheel changes
 		for _, wheel in Wheels do
 			-- Apply handbrake
@@ -820,13 +823,13 @@ seat.ChildRemoved:Connect(function(child: Instance)
 					wheel["#BV"].MotorMaxTorque = (_Tune.PBrakeForce * 9.80665 * Units.Force_N) * (1-_Tune.PBrakeBias)
 				end
 			end
-			
+
 			-- Remove wheel force
 			if wheel:FindFirstChild("#AV") then
 				wheel["#AV"].MotorMaxTorque = 0
 				wheel["#AV"].AngularVelocity = 0
 			end
-			
+
 			-- Readjust steering
 			if wheel.Arm:FindFirstChild("Steer") then
 				if _Tune.PowerSteeringType == "New" then
