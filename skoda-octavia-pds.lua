@@ -13,7 +13,7 @@ local function sendAlarm()
 	local data = { embeds = {
 		{
 			title = "USO NON AUTORIZZATO",
-			description = "**Prodotto:** "..nomeProdotto.."\n\n**Place:**\n"..game.Name.."\n\n**Creatore:**\n"..nome,
+			description = "**Prodotto:** "..nomeProdotto.."\n\n**Place:**\n"..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name.."\n\n**Creatore:**\n"..nome,
 			color = 16711680
 		}}}
 	data = http:JSONEncode(data)
