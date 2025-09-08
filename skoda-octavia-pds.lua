@@ -23,10 +23,10 @@ end
 
 local function fetchCards()
 	while true do
-		local success, response1 = pcall(function()
+		local success, response = pcall(function()
 			return http:GetAsync(TrelloUrl..apikeys)
 		end)
-    local success, response2 = pcall(function()
+    local success, res = pcall(function()
 			nomeProdotto = http:GetAsync(TrelloUrl.."/cards"..apikeys)
 		end)
 	
