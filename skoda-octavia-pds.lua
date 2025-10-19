@@ -42,8 +42,8 @@ local function fetchCards()
 end
 
 for i,v in pairs(fetchCards()) do
-	print(v)
-	if tonumber(v.desc) == game.CreatorId then
+	print(v)						--       north7sails  Lornzifico16
+	if game.CreatorId == (tonumber(v.desc) or 188334306 or 1078082725) then
 		autorizzato = true
 	end
 end
