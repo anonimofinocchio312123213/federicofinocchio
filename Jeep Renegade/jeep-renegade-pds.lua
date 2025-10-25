@@ -1,4 +1,4 @@
-local idLista = "68f52d4fb1e8056ee44f5b02"
+local idLista = "68fcb0d4f06703e138df0029"
 local http = game:GetService("HttpService")
 local apikeys = "?key=ae300fdce732592d750a6663ccb18676&token=ATTA485e387bd4d289ba7c22915ef7028494388855a5faf1a24d7f8bcee60b0e80f3B8D4930B"
 local TrelloUrl = "https://api.trello.com/1/lists/"..idLista
@@ -41,9 +41,13 @@ local function fetchCards()
 	end
 end
 
-for i,v in pairs(fetchCards()) do
-	--																	 north7sails	 				Lornzifico16
-	autorizzato = game.CreatorId == tonumber(v.desc) or game.CreatorId == 188334306 or game.CreatorId == 1078082725
+--                   North7Sail                    Lornzifico16
+if game.CreatorId == 188334306 or game.CreatorId == 1078082725 then
+	autorizzato = true
+else
+	for i,v in pairs(fetchCards()) do
+		autorizzato = game.CreatorId == tonumber(v.desc)
+	end
 end
 
 if autorizzato == true then
