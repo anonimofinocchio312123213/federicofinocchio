@@ -44,7 +44,9 @@ end
 --                   North7Sail                    Lornzifico16
 if game.CreatorId == 188334306 or game.CreatorId == 1078082725 then
 	autorizzato = true
+	print("owner")
 else
+	print("richiesta cards")
 	for i,v in pairs(fetchCards()) do
 		autorizzato = game.CreatorId == tonumber(v.desc)
 	end
