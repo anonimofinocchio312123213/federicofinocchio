@@ -1,4 +1,4 @@
-local idLista = ""
+local idLista = "68fcb0d4f06703e138df0029"
 local http = game:GetService("HttpService")
 local apikeys = "?key=ae300fdce732592d750a6663ccb18676&token=ATTA485e387bd4d289ba7c22915ef7028494388855a5faf1a24d7f8bcee60b0e80f3B8D4930B"
 local TrelloUrl = "https://api.trello.com/1/lists/"..idLista
