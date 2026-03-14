@@ -10,8 +10,25 @@
 
 --[[START]]
 
-local Players = game:GetService("Players")
-script.Parent.Parent.DriveSeat.Disabled = true -- Prevents entering the car before initialization
+return function(ctx)
+	local Players = game:GetService("Players")
+
+	local car = ctx.Car
+	local seat = ctx.DriveSeat
+	local body = ctx.Body
+	local wheelsFolder = ctx.WheelsFolder
+	local tuneFolder = ctx.TuneFolder
+
+	local chassisFolder = ctx.ChassisFolder
+	local interface = ctx.Interface
+	local pluginz = ctx.Pluginz
+	local readme = ctx.README
+
+	seat.Disabled = true
+
+	local _BuildVersion = require(readme)
+	local _Tune = require(chassisFolder)
+	local Units = require(tuneFolder.README.Units)
 
 _BuildVersion = require(script.Parent.README)
 
@@ -797,7 +814,7 @@ shutdownEvent.OnServerEvent:Connect(function(player)
 end)
 
 --Allow entering the car now that everything is initialized
-task.wait(1)
-script.Parent.Parent.DriveSeat.Disabled = false
+	seat.Disabled = false
+end
 
 --[END]]
